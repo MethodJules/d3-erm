@@ -11,22 +11,51 @@ body {
     bottom: 0px;
 }
 
-.view {
+.titleblock .title {
+	font-size: 14px;
+	font-weight:bold;
 }
 
-.entity text {
+.titleblock .author {
+	font-size: 10px;
+	font-weight:bold;
+}
+
+.titleblock .version {
+	font-size: 10px;
+}
+
+.software {
+	font-size: 10px;
+}
+
+.entitytitle {
+	font-size:14px;
+	font-weight:bold;
 	cursor:pointer;
 }
 
-
 .entity rect{
-	stroke:#000;
-	stroke-width:1px;
+  	opacity:0.9;
+	stroke-width:2px;
+}
+
+.attribute {
+	cursor:default;
+}
+
+
+.attribute.primary {
+	font-weight:bold;
+}
+
+.attribute.foreign {
+	font-weight: bold;
+   	font-style: italic;
 }
 
 .reference {
-  stroke: #999;
-  stroke-width: 1.5px;
+  stroke-width: 2px;
   cursor:pointer;
 }
 
@@ -42,7 +71,7 @@ body {
 
 .d3-tip span {
 	font-weight:bold;  
-	color:#AB47BC;
+	color:#E91E63;
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -92,8 +121,16 @@ body {
 }
 
 .highlight {
-	stroke: #AB47BC !important;
+	stroke: #E91E63 !important;
   	stroke-width: 3px !important;
+}
+
+.highlightText {
+	fill: #E91E63 !important;
+}
+
+.software{
+	cursor:pointer;
 }
 
 
