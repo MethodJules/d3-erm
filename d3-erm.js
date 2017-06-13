@@ -58,14 +58,29 @@ var forceCollide = d3.forceCollide()
 			var h = n.getBBox().height;
 			var w = n.getBBox().width;
 			// calculate diagonale and use the half
-			return (Math.sqrt(Math.pow(h,2)+Math.pow(w,2))/2)+40
+			return (Math.sqrt(Math.pow(h,2)+Math.pow(w,2))/2)+20
 	});
+
+
+function forceCluster(alpha) {
+  for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.03; i < n; ++i) {
+    entity = model.entities[i];
+    group =  $.grep(model.entities, function(e){ return e.group == entity.group; });
+    console.log(entity.x)
+    console.log(group[0].x)
+    entity.vx -= (entity.x - group[0].x) * k;
+    entity.vy -= (entity.y - group[0].y) * k;
+  }
+}
+
 var simulation = d3.forceSimulation()        
+	.force("center", d3.forceCenter(width /2, height /3))
 	.force("charge", d3.forceManyBody())  
-    .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.1))
-    .force("cluster", d3.forceLink().id(function(d) { return d.group; }).distance(1).strength(0.1))
+        //.force("x", d3.forceX().strength(0.1))
+        //.force("y", d3.forceY().strength(0.1))
+        .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.1))
+        .force("cluster", forceCluster)
 	.force("collide", forceCollide)    
-	.force("center", d3.forceCenter(width /2, height /3));
 
 var zoom = d3.zoom()
     .scaleExtent([-100, 100])
@@ -95,7 +110,7 @@ defs.append('marker')
     .attr('fill', "#E91E63")
 
 model.groups.forEach(function(group){
-	defs.append('marker')
+    defs.append('marker')
     .attr('id',function(){return'arrowhead'+group.name})
     .attr('viewBox','-5 -5 10 10')
     .attr('refX',0)
@@ -217,10 +232,11 @@ var entity = view
 	.selectAll(".entity")
  	.data(model.entities)
 	.enter().append("g")
-    .attr("class", "entity")
+        .attr("class", "entity")
 	.attr("id", function(d){return d.name;})
 	.on('click', highlightEntity)
-  	.call(d3.drag()
+  	.call(
+        d3.drag()
     	.on("start", dragstarted)
         .on("drag", dragged)
         .on("end", dragended));    
@@ -400,6 +416,7 @@ simulation.force("link").links(model.references)
 simulation.on("tick", ticked);
 
 svg.call(zoom);
+zoom.scaleTo(svg, 0.5);
 svg.call(tipAttr);
 svg.call(tipRef);
 svg.call(tipEnt);
