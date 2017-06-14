@@ -242,9 +242,12 @@ function forceCluster(alpha) {
 }
 
 var simulation = d3.forceSimulation()        
-    .force("center", d3.forceCenter(width /2, height /3))
+    .velocityDecay(0.3)
     .force("charge", d3.forceManyBody())  
-    .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.1))
+    .force("center", d3.forceCenter(width /2, height /3))
+    .force("x", d3.forceX().strength(0.1))
+    .force("y", d3.forceY().strength(0.1))
+    .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.4))
     .force("cluster", forceCluster)
     .force("collide", forceCollide)    
 
