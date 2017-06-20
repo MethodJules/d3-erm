@@ -25,6 +25,15 @@ function validate(erm){
         for (var j in erm.entities[i].references) {
             erm.entities[i].references[j].color = color;
 	    erm.references.push(erm.entities[i].references[j])
+
+            switch (erm.entities[i].type) {
+                case "table":
+                    erm.entities[i].references[j].type = "reference"
+                    break;
+                case "view":
+                    erm.entities[i].references[j].type = "link"
+                    break;
+            }
 	}
     }
     return erm;
@@ -269,6 +278,12 @@ var reference = view
     })
     .attr("id", function(d){return d.source+"---"+d.target})
     .style("stroke", function(d) {return getFrontColor(d.color);})
+    .style("stroke-dasharray", function(d){
+       if (d.type == "link")
+        return "10 5"
+       else
+        return "0"
+   }) 
     .on('click', highlightReference)
     .on('mouseover', function(d,e){
         var target = d3.select('#tipfollowscursor')
@@ -421,6 +436,13 @@ entity.selectAll("circle")
     .attr("cx", function(d) {return this.parentNode.getBBox().width/2-2.5;})
     .attr("cy", function(d) {return this.parentNode.getBBox().height/2-2.5;})
 
+entity.selectAll("rect")
+   .style("stroke-dasharray", function(d){
+       if (d.type == "view")
+        return "10 5"
+       else
+        return "0"
+   }) 
 
 
 // ****************************************************
