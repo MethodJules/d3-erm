@@ -182,6 +182,7 @@ function zoomed() {
 }
 
 svg.call(zoom);
+svg.on("dblclick.zoom", null);
 zoom.scaleTo(svg, 0.5);
 
 // ****************************************************
@@ -319,7 +320,12 @@ var entity = view
     .enter().append("g")
     .attr("class", "entity")
     .attr("id", function(d){return d.name;})
-    .on('click', highlightEntity)
+    .on('click', function(d){
+        if(d3.event.ctrlKey)
+            return highlightEntityReverse(this,d);
+        else 
+            return highlightEntity(this, d);
+    })
     .call(
         d3.drag()
     	    .on("start", dragstarted)
@@ -342,9 +348,9 @@ function dragended(d) {
     d.fy = null;
 } 
 
-function highlightEntity(d){
-    d3.select(this).select("rect").classed("highlight", true);
-    d3.select(this).select("circle").classed("highlight", true);
+function highlightEntity(e, d){
+    d3.select(e).select("rect").classed("highlight", true);
+    d3.select(e).select("circle").classed("highlight", true);
     var refs = $.grep(model.references, function(e){ return e.source.name == d.name; });
     refs.forEach(function(ref) {
         d3.select("#"+ref.target.name).select("rect").classed("highlight", true);
@@ -355,6 +361,18 @@ function highlightEntity(d){
     d3.event.stopPropagation();
 }
 
+function highlightEntityReverse(e, d){
+    d3.select(e).select("rect").classed("highlight", true);
+    d3.select(e).select("circle").classed("highlight", true);
+    var refs = $.grep(model.references, function(e){ return e.target.name == d.name; });
+    refs.forEach(function(ref) {
+        d3.select("#"+ref.source.name).select("rect").classed("highlight", true);
+	d3.select("#"+ref.source.name).select("circle").classed("highlight", true);
+	d3.select("#"+ref.source.name+"---"+ref.target.name).classed("highlight", true);	
+	d3.select("#"+ref.source.name+"---"+ref.target.name).attr("marker-mid", "url(#arrowheadhighlight)");
+    }); 	
+    d3.event.stopPropagation();
+}
 // add circle to center of entity
 var circle = entity.append("circle")
     .attr("r", 5)		
