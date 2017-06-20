@@ -417,8 +417,7 @@ var title = entity.append("a")
     .attr("class", "entitytitle")
     .text(function(d) { return d.name })
     .attr("fill", function(d) {
-        var g = $.grep(model.groups, function(e){ return e.name == d.group; });
-	return getFrontColor(g[0].color);
+	return getFrontColor(d.color);
     })
     .on('mouseover', tipEnt.show)
     .on('mouseout', tipEnt.hide);
