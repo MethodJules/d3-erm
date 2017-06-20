@@ -108,6 +108,13 @@ var svg = d3.select(container)
     .attr("height", height)
     .on("click", resetHighlight);
 
+d3.select("body")
+    .on("keydown", function(){
+        if (d3.event.keyCode == 27) // ESC Key
+            resetHighlight();
+    });
+    
+
 // resetHighlight removes all highlights
 // it is trigger when the user clicks somewhere in the SVG
 function resetHighlight() {
