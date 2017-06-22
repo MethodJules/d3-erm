@@ -174,7 +174,7 @@ model.groups.forEach(function(group){
         .attr('xoverflow','visible')
         .append('svg:path')
             .attr('d', 'M 0,0 m -5,-5 L 5,0 L -5,5 Z')
-            .attr('fill', function(){return getFrontColor(group.color)})
+            .attr('fill', function(){return group.color})
 });
 
 // ****************************************************
@@ -250,7 +250,7 @@ var forceCollide = d3.forceCollide()
 
 
 function forceCluster(alpha) {
-    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.03; i < n; ++i) {
+    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.5; i < n; ++i) {
         entity = model.entities[i];
         group =  $.grep(model.entities, function(e){ return e.group == entity.group; });
         entity.vx -= (entity.x - group[0].x) * k;
@@ -261,7 +261,7 @@ function forceCluster(alpha) {
 var simulation = d3.forceSimulation()        
     .velocityDecay(0.3)
     .force("charge", d3.forceManyBody())  
-    .force("center", d3.forceCenter(width /2, height /3))
+    .force("center", d3.forceCenter(width /2, height /2))
     .force("x", d3.forceX().strength(0.1))
     .force("y", d3.forceY().strength(0.1))
     .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.4))
@@ -285,7 +285,7 @@ var reference = view
 	return "url(#arrowhead" + e[0].group + ")";
     })
     .attr("id", function(d){return d.source+"---"+d.target})
-    .style("stroke", function(d) {return getFrontColor(d.color);})
+    .style("stroke", function(d) {return d.color;})
     .style("stroke-dasharray", function(d){
        if (d.type == "link")
         return "10 5"
