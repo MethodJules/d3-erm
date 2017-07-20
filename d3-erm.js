@@ -245,12 +245,12 @@ var forceCollide = d3.forceCollide()
 	var h = n.getBBox().height;
 	var w = n.getBBox().width;
 	// calculate diagonale and use the half + offset
-	return (Math.sqrt(Math.pow(h,2)+Math.pow(w,2))/2)+20
+	return (Math.sqrt(Math.pow(h,2)+Math.pow(w,2))/2)+50
     });
 
 
 function forceCluster(alpha) {
-    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.8; i < n; ++i) {
+    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.5; i < n; ++i) {
         entity = model.entities[i];
         group =  $.grep(model.entities, function(e){ return e.group == entity.group; });
         entity.vx -= (entity.x - group[0].x) * k;
@@ -264,7 +264,7 @@ var simulation = d3.forceSimulation()
     .force("center", d3.forceCenter(width /2, height /2))
     .force("x", d3.forceX().strength(0.1))
     .force("y", d3.forceY().strength(0.1))
-    .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.4))
+    .force("link", d3.forceLink().id(function(d) { return d.name; }).distance(1).strength(0.2))
     .force("cluster", forceCluster)
     .force("collide", forceCollide)    
 
@@ -332,13 +332,13 @@ var entity = view
             return highlightEntityReverse(this,d);
         else 
             return highlightEntity(this, d);
-    })
-    .call(
+    });
+   /* .call(
         d3.drag()
     	    .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended)
-    );    
+    ); */   
 
 function dragstarted(d) {
     if (!d3.event.active) simulation.alphaTarget(0.3).restart();
