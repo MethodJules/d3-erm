@@ -250,7 +250,7 @@ var forceCollide = d3.forceCollide()
 
 
 function forceCluster(alpha) {
-    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.5; i < n; ++i) {
+    for (var i = 0, n = model.entities.length, entity, group, k = alpha * 0.8; i < n; ++i) {
         entity = model.entities[i];
         group =  $.grep(model.entities, function(e){ return e.group == entity.group; });
         entity.vx -= (entity.x - group[0].x) * k;
